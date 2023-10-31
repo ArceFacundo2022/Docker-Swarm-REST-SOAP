@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  base-datos:
+    image: mysql:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    environment:
+      MYSQL_ROOT_PASSWORD: root1
+    networks:
+      - mi-red
+    volumes:
+      - C:/LG/Carpeta de Trabajo/Seminario de Actualizacion III/Docker_Swarm/volumen:/var/lib/mysql
+networks:
+  mi-red:
+    driver: overlay
+    attachable: true

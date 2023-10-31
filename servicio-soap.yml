@@ -1,0 +1,16 @@
+services:
+  soap-servicio:
+    image: image-soap-swarm
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    ports:
+      - 3002:3555
+    networks:
+      - base-datos_mi-red  # Aquí se especifica la red a la que se conectará el servicio web
+networks:
+  base-datos_mi-red:
+    external: true  # Aquí se define la red externa, si ya está creada
+    name: base-datos_mi-red
+

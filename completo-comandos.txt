@@ -1,0 +1,161 @@
+version: "3.8"
+
+services:
+  base-datos:
+    image: mysql:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    environment:
+      MYSQL_ROOT_PASSWORD: root1
+    networks:
+      - mi-red
+networks:
+  mi-red:
+    driver: overlay
+
+
+
+
+
+
+
+-- Crear la base de datos "prueba"
+CREATE DATABASE IF NOT EXISTS prueba;
+
+-- Usar la base de datos "prueba"
+USE prueba;
+
+-- Crear la tabla "alumnos"
+CREATE TABLE IF NOT EXISTS alumnos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    apellidos VARCHAR(200),
+    nombres VARCHAR(200),
+    dni INT(11),
+    nota INT(2)
+);
+
+-- Insertar registros en la tabla "alumnos"
+INSERT INTO alumnos (apellidos, nombres, dni, nota) VALUES
+    ('García', 'Juan', 345678901, 5),
+    ('López', 'María', 456789012, 8),
+    ('Martínez', 'Carlos', 367890123, 10);
+
+
+
+
+
+
+
+
+
+
+
+FROM php:8.2-apache-bullseye
+
+RUN docker-php-ext-install mysqli
+RUN docker-php-ext-enable mysqli
+RUN apt-get update && apt-get install -y default-mysql-client
+RUN apt-get install -y nano
+
+
+
+
+
+
+
+
+	
+	
+version: "3.8"
+
+services:
+  servicio-web:
+    image: image-php-apache
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    networks:
+      - base-datos_mi-red  # Aquí se especifica la red a la que se conectará el servicio web
+    volumes:
+      - type: bind
+        source: /home/elb/Despliegues/index.php
+        target: /var/www/html/index.php
+networks:
+  base-datos_mi-red:
+    external: true  # Aquí se define la red externa, si ya está creada
+    name: base-datos_mi-red
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+sudo docker stack deploy --compose-file base-datos.yml base-datos
+sudo docker stack deploy --compose-file servicio-web.yml servicio-web
+
+
+sudo docker service ls
+sudo docker ps
+sudo docker network ls
+
+
+
+sudo docker stack rm servicio-web
+sudo docker stack rm base-datos
+
+
+docker stack deploy --compose-file servicio-web.yml servicio-web
+
+
+
+sudo docker network connect base-datos_mi-red servicio-web
+
+
+
+
+
+
+
+
+
+<?php
+$servername = "base-datos_base-datos"; // Nombre del servicio de base de datos en Docker Swarm
+$username = "root"; // Nombre de usuario de la base de datos
+$password = "root1"; // Contraseña de la base de datos
+$dbname = "prueba"; // Nombre de la base de datos
+
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Consulta a la tabla
+$sql = "SELECT apellidos, nombres, dni FROM alumnos";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Mostrar los datos de cada fila
+    while($row = $result->fetch_assoc()) {
+        echo "Apellido: " . $row["apellidos"]. " - Nombre: " . $row["nombres"]. " - Dni: " . $row["dni"]. "<br>";
+    }
+} else {
+    echo "0 resultados";
+}
+$conn->close();
+?>
+

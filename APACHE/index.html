@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Practicas de Servicios</title>
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>Practicas de Servicios</h1>
+      </header>
+      <main>
+        <form name="ListTask">
+          <fieldset>
+            <legend><b>Solicitud de lista de alumnos</b></legend>
+            <div class="column">
+              <div class="component comp02">
+<input type="button" id="addConte" value="Alumnos Nombre (REST) ☑️" onclick="Alumnos_Nombre_REST()"> | <input type="button" id="deleteConte" value="Alumnos Nota (REST) ☑️" onclick="EliminarContenedor()">
+ |>-----------------<| 
+<input type="button" id="addConte" value="Alumnos Nombre (SOAP) ☑️" onclick="AgregarContenedor()"> | <input type="button" id="deleteConte" value="Alumnos Nota (SOAP) ☑️" onclick="EliminarContenedor()">
+              </div>
+            </div>
+            <div class="column">
+              <div class="component comp02">
+                <pre>
+    <b>Lista de Alumnos: </b>
+    <p id="ContList"></p>
+                </pre>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </main>
+      <footer>
+
+      </footer>
+    </div>
+    <script>
+
+        const Alumnos_Nombre_REST = async () => {
+            const res = await listName()
+            if(!res){
+              return alert("Error al hacer la peticion")
+            }
+            // Imprimir los arrays actualizados
+            alert("Listado completo, ordenado por nombre (REST)" + valorSeleccionado);
+        }
+
+        const listName = async () => {
+          var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+          };
+          try {    
+            const respuesta = await fetch(`http://localhost:3001/consultarAlumnosPorApellido`, requestOptions)
+            if(respuesta){
+              document.getElementById('ContList').innerText = result.Lista; 
+              return response.json();
+            } else {
+              throw new Error('Error en la solicitud');
+            }
+          } catch (error) {
+            console.log(error)
+          }
+
+        }
+    </script>
+    <style>
+      header{
+        background-color: #f7edd1;
+      }
+      body{
+        background-image: url(https://thumbs.dreamstime.com/b/abandone-el-fondo-incons%C3%BAtil-del-modelo-de-la-flor-en-tono-marr%C3%B3n-y-poner-crema-desierto-103693324.jpg);
+      }
+      form {
+        background-color: #f7edd1;
+      }
+      
+      .column {
+    max-width: 1100px; /* Cambia esto según tus necesidades */
+    margin: 0 auto; /* Centrar el contenedor en la página */
+    display: flex; /* Utilizar flexbox para distribuir en columnas */
+    flex-wrap: wrap; /* Permitir que los elementos fluyan a la siguiente fila si no caben en una columna */
+    justify-content: space-between; /* Distribuir los elementos con espacio entre ellos */
+    }
+
+    /* Estilo de los componentes */
+    .component {
+        margin-bottom: 20px; /* Espacio entre los componentes */
+        padding: 10px; /* Relleno interno para los componentes */
+        border: 1px solid #ccc; /* Borde para los componentes */
+        box-sizing: border-box; /* Incluir el borde en el cálculo del ancho */
+        text-align: center; /* Centrar el contenido de los componentes */
+        background-color: #f2f2f2; /* Color de fondo de los componentes */
+    }
+
+    .subComponent {
+        margin-bottom: 20px; /* Espacio entre los componentes */
+        padding: 10px; /* Relleno interno para los componentes */
+        border: 1px solid #d8d3c5; /* Borde para los componentes */
+        box-sizing: border-box; /* Incluir el borde en el cálculo del ancho */
+        text-align: center; /* Centrar el contenido de los componentes */
+        background-color: #f7f2e4; /* Color de fondo de los componentes */
+    }
+
+    .comp01{
+      width: calc(50% - 10px); /* Calcular el ancho de cada componente en función del número de columnas */
+    }
+
+    .comp02{
+      width: calc(99.99% - 10px); /* Calcular el ancho de cada componente en función del número de columnas */
+    }
+
+    .comp03{
+      width: calc(66.66% - 10px); /* Calcular el ancho de cada componente en función del número de columnas */
+    }
+    .comp04{
+      width: calc(20% - 10px); /* Calcular el ancho de cada componente en función del número de columnas */
+    }
+
+    .Estado{
+      color: #150ee3;
+    }
+      </style>
+  </body>
+</html>

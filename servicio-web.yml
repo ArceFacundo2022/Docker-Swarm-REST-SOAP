@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  servicio-web:
+    image: image-php-apache
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    ports:
+      - 8081:80
+    networks:
+      - base-datos_mi-red  # Aquí se especifica la red a la que se conectará el servicio web
+    volumes:
+      - C:/LG/Carpeta de Trabajo/Seminario de Actualizacion III/Docker_Swarm/volumen:/var/www/html/index.php
+networks:
+  base-datos_mi-red:
+    external: true  # Aquí se define la red externa, si ya está creada
+    name: base-datos_mi-red
+
+
